@@ -19,7 +19,7 @@ def index(request):
     # perduodame informaciją į šabloną žodyno pavidale:
     context = {
         'num_cars': num_cars,
-        'num_instances': num_models,
+        'num_models': num_models,
         'num_order_status': num_order_status,
         'num_orders': num_orders,
         'num_services': num_services,
