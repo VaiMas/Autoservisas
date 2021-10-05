@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+
+{% block content %}
+  <h1>The Best Car Service in Town</h1>
+  <p>Welcome to car paradise!</p>
+  <p>At the moment:</p>
+  <ul>
+    <li><strong>Services:</strong> {{ num_services }}</li>
+    <li><strong>Cars:</strong> {{ num_cars }}</li>
+    <li><strong>Orders:</strong> {{ num_orders }}</li>
+    <li><strong>Orders status:</strong> {{ num_order_status }}</li>
+      <li><strong>Car Models:</strong> {{ num_models }}</li>
+  </ul>
+{% endblock %}
