@@ -21,7 +21,7 @@ class Car(models.Model):
     car_model = models.ForeignKey('CarModel', verbose_name='Model', on_delete=models.SET_NULL, null=True)
 
     def __str__(self):
-        return f"{self.owner}: {self.car_model}, {self.licence_plate}, {self.vin_code}"
+        return f"{self.owner} {self.car_model} {self.licence_plate} {self.vin_code}"
 
     class Meta:
         verbose_name = 'Car'

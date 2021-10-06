@@ -1,0 +1,10 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <div class="container car">
+        <p>Car Owner: </strong>{{ car.owner }}</p>
+        <p>Car Model: </strong>{{ car.car_model }} </p>
+        <p>Licence plate: </strong>{{ car.licence_plate }}</p>
+        <p>VIN code: </strong>{{ car.vin_code }}</p>
+    </div>
+{% endblock %}

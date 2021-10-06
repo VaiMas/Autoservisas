@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+
+{% block content %}
+  <h1>Orders</h1>
+  {% if order_list %}
+  <ul>
+    {% for order in order_list %}
+      <li>
+        <a href="{{ order.id }}">{{ order.car }}</a>
+      </li>
+    {% endfor %}
+  </ul>
+  {% else %}
+    <p>We do not have anything</p>
+  {% endif %}
+{% endblock %}

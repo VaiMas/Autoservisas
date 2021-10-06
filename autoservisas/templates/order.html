@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <div class="container car">
+        <p><strong>Car: </strong> {{ order.car }} </p>
+        <p><strong>Due date: </strong>{{ order.due_date }}</p>
+    </div>
+
+  <div style="margin-left:20px;margin-top:20px">
+    <h4>Services:</h4>
+    {% for orderline in order.lines.all %}
+      <hr>
+      <p>{{ orderline.service }}</strong> - {{orderline.qty}} pcs. </p>
+    {% endfor %}
+  </div>
+{% endblock %}
