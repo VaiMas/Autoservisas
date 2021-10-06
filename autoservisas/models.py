@@ -19,6 +19,7 @@ class Car(models.Model):
     owner = models.CharField(verbose_name='Owner', null=True, max_length=200)
     vin_code = models.CharField(verbose_name='VIN code', max_length=13)
     car_model = models.ForeignKey('CarModel', verbose_name='Model', on_delete=models.SET_NULL, null=True)
+    cover = models.ImageField('Image', upload_to='covers', null=True)
 
     def __str__(self):
         return f"{self.owner} {self.car_model} {self.licence_plate} {self.vin_code}"
