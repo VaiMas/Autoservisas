@@ -19,6 +19,8 @@ def index(request):
     num_orders = Order.objects.count()
 
     num_services = Service.objects.count()
+    num_visits = request.session.get('num_visits', 1)
+    request.session['num_visits'] = num_visits + 1
 
     # perduodame informaciją į šabloną žodyno pavidale:
     context = {
@@ -27,6 +29,7 @@ def index(request):
         'num_order_status': num_order_status,
         'num_orders': num_orders,
         'num_services': num_services,
+        'num_visits': num_visits,
     }
 
     # renderiname index.html, su duomenimis kintamąjame context

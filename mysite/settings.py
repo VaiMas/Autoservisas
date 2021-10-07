@@ -32,13 +32,13 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
+    'autoservisas',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'autoservisas'
 ]
 
 MIDDLEWARE = [
@@ -127,7 +127,19 @@ STATIC_URL = '/static/'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 # media folder settings
-MEDIA_ROOT = os.path.join(BASE_DIR, 'library/media')
+MEDIA_ROOT = os.path.join(BASE_DIR, 'autoservisas/media')
 
 MEDIA_URL = '/media/'
 # print(MEDIA_ROOT) - nevenkite padebuginti, bus lengviau nepasiklysti django filesystem džiunglėse
+
+LOGIN_REDIRECT_URL = '/'
+
+from .secret_setings import user, password
+
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_POST = 587
+EMAIL_USE_TLS = True
+EMAIL_HOST_USER = user
+EMAIL_HOST_PASSWORD = password
+
