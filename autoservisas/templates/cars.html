@@ -1,11 +1,29 @@
 {% extends "base.html" %}
 
 {% block content %}
+ {% load static %}
   <h1>Cars</h1>
   <p>All cars at the moment</p>
-  {% for c in cars %}
-    <li><a href="{% url 'car' c.id %}">{{ c.licence_plate }}</a></li>
-    {% endfor %}
+{% if cars %}
+    <div class="row">
+      {% for c in cars %}
+        <div class="col-md-4 d-flex align-items-stretch">
+          <div class="card mb-4 shadow-sm">
+            {% if c.cover %}
+              <img src="{{ c.cover.url }}" class="card-img-top" alt="...">
+            {% else %}
+              <img src="{% static 'img/no-image.png' %}" class="card-img-top">
+            {% endif %}
+            <div class="card-body">
+              <li><a href="{% url 'car' c.id %}">{{ c.licence_plate }}</a></li>
+            </div>
+          </div>
+        </div>
+      {% endfor %}
+    </div>
+    {% else %}
+      <p>Bibliotekoje knygų nėra.</p>
+    {% endif %}
 <div class="container cars">
     <nav aria-label="...">
         {% if cars.has_other_pages %}
