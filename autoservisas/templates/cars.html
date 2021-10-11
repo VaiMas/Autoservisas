@@ -15,14 +15,14 @@
               <img src="{% static 'img/no-image.png' %}" class="card-img-top">
             {% endif %}
             <div class="card-body">
-              <li><a href="{% url 'car' c.id %}">{{ c.licence_plate }}</a></li>
+              <li><a href="{% url 'car' c.id %}">{{ c.licence_plate }}</a></li><p>{{ car.description | safe }}</p>
             </div>
           </div>
         </div>
       {% endfor %}
     </div>
     {% else %}
-      <p>Bibliotekoje knygų nėra.</p>
+      <p>There is no cars.</p>
     {% endif %}
 <div class="container cars">
     <nav aria-label="...">

@@ -8,7 +8,7 @@ class OrderLineInline(admin.TabularInline):
     extra = 0 # išjungia placeholder'ius
 
 class OrderAdmin(admin.ModelAdmin):
-    list_display = ('car', 'due_date')
+    list_display = ('client', 'car', 'due_date')
     inlines = [OrderLineInline]
 
 class CarAdmin(admin.ModelAdmin):

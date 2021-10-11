@@ -1,4 +1,10 @@
 from django.db import models
+from django.contrib.auth.models import User
+import datetime
+import pytz
+utc = pytz.UTC
+from tinymce.models import HTMLField
+
 
 
 # Create your models here.
@@ -20,6 +26,7 @@ class Car(models.Model):
     vin_code = models.CharField(verbose_name='VIN code', max_length=13)
     car_model = models.ForeignKey('CarModel', verbose_name='Model', on_delete=models.SET_NULL, null=True)
     cover = models.ImageField('Image', upload_to='covers', null=True)
+    description = HTMLField('Description', null=True, blank=True)
 
     def __str__(self):
         return f"{self.owner} {self.car_model} {self.licence_plate} {self.vin_code}"
@@ -44,6 +51,14 @@ class Service(models.Model):
 class Order(models.Model):
     due_date = models.DateTimeField(verbose_name='Due Date', null=True, blank=True)
     car = models.ForeignKey('Car', verbose_name='Car', on_delete=models.SET_NULL, null=True)
+    client = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True)
+
+
+    @property
+    def is_overdue(self):
+        if self.due_date and datetime.datetime.today().replace(tzinfo=utc) > self.due_date.replace(tzinfo=utc):
+            return True
+        return False
 
     CAR_STATUS = (
         ('a', 'Approved'),

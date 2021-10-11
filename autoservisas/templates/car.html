@@ -12,5 +12,6 @@
         <p>Car Model: </strong>{{ car.car_model }} </p>
         <p>Licence plate: </strong>{{ car.licence_plate }}</p>
         <p>VIN code: </strong>{{ car.vin_code }}</p>
+        <p>Description:{{ car.description | safe }}</p>
     </div>
 {% endblock %}
