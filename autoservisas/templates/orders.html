@@ -6,6 +6,7 @@
   <ul>
     {% for order in order_list %}
       <li>
+          <img class="rounded-circle" src="{{order.client.profile.picture.url}}">
         <a href="{{ order.id }}">{{ order.car }}</a>
       </li>
     {% endfor %}

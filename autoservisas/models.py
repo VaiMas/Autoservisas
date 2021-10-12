@@ -2,8 +2,9 @@ from django.db import models
 from django.contrib.auth.models import User
 import datetime
 import pytz
-utc = pytz.UTC
 from tinymce.models import HTMLField
+from PIL import Image
+utc = pytz.UTC
 
 
 
@@ -24,8 +25,8 @@ class Car(models.Model):
     licence_plate = models.CharField(verbose_name='Licence plate', max_length=10)
     owner = models.CharField(verbose_name='Owner', null=True, max_length=200)
     vin_code = models.CharField(verbose_name='VIN code', max_length=13)
-    car_model = models.ForeignKey('CarModel', verbose_name='Model', on_delete=models.SET_NULL, null=True)
-    cover = models.ImageField('Image', upload_to='covers', null=True)
+    car_model = models.ForeignKey('CarModel', verbose_name='Model', on_delete=models.SET_NULL, null=True, blank=True)
+    cover = models.ImageField('Image', upload_to='covers', null=True, blank=True)
     description = HTMLField('Description', null=True, blank=True)
 
     def __str__(self):
@@ -115,3 +116,22 @@ class OrderLine(models.Model):
 
     def __str__(self):
         return f"{self.order}: {self.service}, {self.qty}"
+
+class Profile(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    picture = models.ImageField(default="default.png", upload_to="profile_pics")
+
+    class Meta:
+        verbose_name = 'Profile'
+        verbose_name_plural = 'Profiles'
+
+    def __str__(self):
+        return f"{self.user.username} profile"
+
+    def save(self,  *args, **kwargs):
+        super().save()
+        img = Image.open(self.picture.path)
+        if img.height > 300 or img.width > 300:
+            output_size = (300, 300)
+            img.thumbnail(output_size)
+            img.save(self.picture.path)

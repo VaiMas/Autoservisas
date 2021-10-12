@@ -32,14 +32,15 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
-    'autoservisas',
+    'tinymce',
+    'autoservisas.apps.AutoservisasConfig',
+    'crispy_forms',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'tinymce',
 ]
 
 MIDDLEWARE = [
@@ -171,4 +172,6 @@ TINYMCE_DEFAULT_CONFIG = {
     'menubar': True,
     'statusbar': True,
     }
+
+CRISPY_TEMPLATE_PACK = 'bootstrap4'
 

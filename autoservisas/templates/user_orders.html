@@ -7,6 +7,7 @@
     <ul>
 
       {% for order in order_list %}
+        <img class="rounded-circle" src="{{order.client.profile.picture.url}}">
       <li class="{% if order.is_overdue %}text-danger{% endif %}">
         <a href="{% url 'order-detail' order.pk %}">{{ order.car }}</a> ({{ order.due_date }})
       </li>

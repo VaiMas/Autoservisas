@@ -1,7 +1,7 @@
 from django.contrib import admin
 
 # Register your models here.
-from .models import Service, CarModel, Car, Order, OrderLine, OrderReview
+from .models import Service, CarModel, Car, Order, OrderLine, OrderReview, Profile
 
 class OrderLineInline(admin.TabularInline):
     model = OrderLine
@@ -29,3 +29,4 @@ admin.site.register(Car, CarAdmin)
 admin.site.register(Order, OrderAdmin)
 admin.site.register(OrderLine)
 admin.site.register(OrderReview, OrderReviewAdmin)
+admin.site.register(Profile)
