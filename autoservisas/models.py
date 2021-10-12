@@ -40,6 +40,7 @@ class Service(models.Model):
     name = models.CharField(verbose_name='Name', max_length=200)
     price = models.FloatField(verbose_name='Price')
 
+
     def __str__(self):
         return self.name
 
@@ -59,6 +60,14 @@ class Order(models.Model):
         if self.due_date and datetime.datetime.today().replace(tzinfo=utc) > self.due_date.replace(tzinfo=utc):
             return True
         return False
+
+    @property
+    def total_sum(self):
+        sum = 0
+        orderline = OrderLine.objects.filter(order=self.id)
+        for line in orderline:
+            sum += line.service.price * line.qty
+        return sum
 
     CAR_STATUS = (
         ('a', 'Approved'),
@@ -82,11 +91,22 @@ class Order(models.Model):
         verbose_name = 'Order'
         verbose_name_plural = 'Orders'
 
+class OrderReview(models.Model):
+    order = models.ForeignKey('Order', on_delete=models.SET_NULL, null=True, blank=True)
+    reviewer = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True)
+    date_created = models.DateTimeField(auto_now_add=True)
+    content = models.TextField('Review', max_length=2000)
+
 
 class OrderLine(models.Model):
     order = models.ForeignKey('Order', verbose_name="Order", on_delete=models.SET_NULL, null=True, related_name='lines')
     service = models.ForeignKey('Service', verbose_name="Service", on_delete=models.SET_NULL, null=True)
     qty = models.IntegerField("Quantity")
+
+    @property
+    def item_sum(self):
+        return self.service.price * self.qty
+
 
     class Meta:
         verbose_name = 'Order Line'

@@ -1,10 +1,16 @@
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import render, get_object_or_404, reverse
 from django.http import HttpResponse
 from .models import Car, CarModel, Order, Service
 from django.views import generic
 from django.core.paginator import Paginator
 from django.db.models import Q
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.shortcuts import redirect
+from django.contrib.auth.forms import User
+from django.views.decorators.csrf import csrf_protect
+from django.contrib import messages
+from .forms import OrderReviewForm
+from django.views.generic.edit import FormMixin
 
 
 # Create your views here.
@@ -76,13 +82,72 @@ def search(request):
         car_model__model__icontains=query))
     return render(request, 'search.html', {'cars': search_results, 'query': query})
 
-
 class OrdersByUserListView(LoginRequiredMixin, generic.ListView):
     model = Order
     template_name = 'user_orders.html'
-    paginate_by = 10
 
     def get_queryset(self):
         return Order.objects.filter(client=self.request.user).filter(status__exact='p').order_by('due_date')
+
+class OrdersByUserDetailView(FormMixin, generic.DetailView):
+    model = Order
+    template_name = 'user_orders.html'
+    paginate_by = 10
+    form_class = OrderReviewForm
+
+    class Meta:
+        ordering = ['car']
+
+    def get_success_url(self):
+        return reverse('order-detail', kwargs={'pk': self.object.id})
+
+    def get_context_data(self, *args, **kwargs):
+        context = super(OrdersByUserDetailView, self).get_context_data(**kwargs)
+        context['form'] = OrderReviewForm(initial={'order': self.object})
+        return context
+
+    def post(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        form = self.get_form()
+        if form.is_valid():
+            return self.form_valid(form)
+        else:
+            return self.form_invalid(form)
+
+    def form_valid(self, form):
+        form.instance.order = self.object
+        form.instance.reviewer = self.request.user
+        form.save()
+        return super(OrdersByUserDetailView, self).form_valid(form)
+
+@csrf_protect
+def register(request):
+    if request.method == "POST":
+        # pasiimame reikšmes iš registracijos formos
+        username = request.POST['username']
+        email = request.POST['email']
+        password = request.POST['password']
+        password2 = request.POST['password2']
+        # tikriname, ar sutampa slaptažodžiai
+        if password == password2:
+            # tikriname, ar neužimtas username
+            if User.objects.filter(username=username).exists():
+                messages.error(request, f'User name {username} already in use!')
+                return redirect('register')
+            else:
+                # tikriname, ar nėra tokio pat email
+                if User.objects.filter(email=email).exists():
+                    messages.error(request, f'Email {email} already in use!')
+                    return redirect('register')
+                else:
+                    # jeigu viskas tvarkoje, sukuriame naują vartotoją
+                    User.objects.create_user(username=username, email=email, password=password)
+        else:
+            messages.error(request, 'Passwords do not match')
+            return redirect('register')
+    return render(request, 'register.html')
+
+
+
 
 
