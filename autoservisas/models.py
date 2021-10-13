@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import User
+from django.urls import reverse
 import datetime
 import pytz
 from tinymce.models import HTMLField
@@ -69,6 +70,11 @@ class Order(models.Model):
         for line in orderline:
             sum += line.service.price * line.qty
         return sum
+
+    def get_absolute_url(self):
+        """Nurodo konkretaus aprašymo galinį adresą"""
+        return reverse('order-detail', args=[str(self.id)])
+
 
     CAR_STATUS = (
         ('a', 'Approved'),

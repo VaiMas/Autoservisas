@@ -8,13 +8,16 @@
 
       {% for order in order_list %}
         <img class="rounded-circle" src="{{order.client.profile.picture.url}}">
-      <li class="{% if order.is_overdue %}text-danger{% endif %}">
-        <a href="{% url 'order-detail' order.pk %}">{{ order.car }}</a> ({{ order.due_date }})
+      <li class="{% if order.is_overdue %}text-danger{% endif %}">{{ order.car }}</li>
+        <li><strong>Due to:</strong> {{order.due_date}}</li>
+        <br/>
+        <a class="btn btn-primary" href="{{ order.pk }}" role="button">Review</a>
+        <br>
       </li>
       {% endfor %}
     </ul>
 
     {% else %}
       <p>You do not have any cars at the moment</p>
-    {% endif %}       
+    {% endif %}
 {% endblock %}

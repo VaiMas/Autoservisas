@@ -13,6 +13,7 @@ from .forms import OrderReviewForm
 from django.views.generic.edit import FormMixin
 from django.contrib.auth.decorators import login_required
 from .forms import OrderReviewForm, UserUpdateForm, ProfileUpdateForm
+from django.contrib.auth.mixins import UserPassesTestMixin
 
 
 # Create your views here.
@@ -116,6 +117,44 @@ class OrdersByUserListView(LoginRequiredMixin, generic.ListView):
 
     def get_queryset(self):
         return Order.objects.filter(client=self.request.user).filter(status__exact='p').order_by('due_date')
+
+
+class OrderByUserDetailView(LoginRequiredMixin, generic.DetailView):
+    model = Order
+    template_name = 'user_order.html'
+
+class OrderByUserCreateView(LoginRequiredMixin, generic.CreateView):
+    model = Order
+    fields = ['car', 'due_date']
+    success_url = "/autoservisas/myorders/"
+    template_name = 'user_order_form.html'
+
+    def form_valid(self, form):
+        form.instance.client = self.request.user
+        return super().form_valid(form)
+
+class OrderByUserUpdateView(LoginRequiredMixin, UserPassesTestMixin, generic.UpdateView):
+    model = Order
+    fields = ['car', 'due_date']
+    success_url = "/autoservisas/myorders/"
+    template_name = 'user_order_form.html'
+
+    def form_valid(self, form):
+        form.instance.client = self.request.user
+        return super().form_valid(form)
+
+    def test_func(self):
+        car = self.get_object()
+        return self.request.user == car.client
+
+class OrderByUserDeleteView(LoginRequiredMixin, UserPassesTestMixin, generic.DeleteView):
+    model = Order
+    success_url = "/autoservisas/myorders/"
+    template_name = 'user_order_delete.html'
+
+    def test_func(self):
+        car = self.get_object()
+        return self.request.user == car.client
 
 
 @csrf_protect
