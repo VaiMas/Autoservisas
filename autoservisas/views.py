@@ -123,6 +123,25 @@ class OrderByUserDetailView(LoginRequiredMixin, generic.DetailView):
     model = Order
     template_name = 'user_order.html'
 
+    def get_context_data(self, *args, **kwargs):
+        context = super(OrderByUserDetailView, self).get_context_data(**kwargs)
+        context['form'] = OrderReviewForm(initial={'order': self.object})
+        return context
+
+    def post(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        form = self.get_form()
+        if form.is_valid():
+            return self.form_valid(form)
+        else:
+            return self.form_invalid(form)
+
+    def form_valid(self, form):
+        form.instance.order = self.object
+        form.instance.reviewer = self.request.user
+        form.save()
+        return super(OrderByUserDetailView, self).form_valid(form)
+
 class OrderByUserCreateView(LoginRequiredMixin, generic.CreateView):
     model = Order
     fields = ['car', 'due_date']
@@ -203,8 +222,3 @@ def profile(request):
         'p_form': p_form,
     }
     return render(request, 'profile.html', context)
-
-
-
-
-

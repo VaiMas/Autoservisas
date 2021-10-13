@@ -17,4 +17,36 @@
         <br/>
       </li>
     </ul>
+<div style="margin-left:20px;margin-top:20px">
+    <h4>Services:</h4>
+    {% for orderline in order.lines.all %}
+    <hr>
+    <p>{{ orderline.service }} - {{orderline.qty}} pcs. Total: {{orderline.item_sum}} </p>
+    {% endfor %}
+    <p><strong>Total: </strong> {{ order.total_sum }} </p>
+    </br>
+    <h4>Reviews:</h4>
+    {% if order.orderreview_set.all %}
+    {% for review in order.orderreview_set.all %}
+    <hr>
+    <strong>{{ review.reviewer }}</strong>, <em>{{ review.date_created}}</em>
+    <p>{{ review.content }}</p>
+    {% endfor %}
+    {% else %}
+    <p>There is no reviews</p>
+    {% endif %}
+
+    {% if user.is_authenticated %}
+    <div class="fieldWrapper">
+        <hr>
+        <br/>
+        <h4>Leave your review:</h4>
+        <form action="" method="post">
+            {% csrf_token %}
+            {{ form.content }}</br>
+            <input type="submit" value="Save">
+        </form>
+    </div>
+    {% endif %}
+</div>
 {% endblock %}
