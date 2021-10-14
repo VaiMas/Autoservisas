@@ -1,6 +1,6 @@
 from django.shortcuts import render, get_object_or_404, reverse
 from django.http import HttpResponse
-from .models import Car, CarModel, Order, Service
+from .models import Car, CarModel, Order, Service,  OrderLine
 from django.views import generic
 from django.core.paginator import Paginator
 from django.db.models import Q
@@ -14,6 +14,7 @@ from django.views.generic.edit import FormMixin
 from django.contrib.auth.decorators import login_required
 from .forms import OrderReviewForm, UserUpdateForm, ProfileUpdateForm
 from django.contrib.auth.mixins import UserPassesTestMixin
+import request
 
 
 # Create your views here.
@@ -119,9 +120,13 @@ class OrdersByUserListView(LoginRequiredMixin, generic.ListView):
         return Order.objects.filter(client=self.request.user).filter(status__exact='p').order_by('due_date')
 
 
-class OrderByUserDetailView(LoginRequiredMixin, generic.DetailView):
+class OrderByUserDetailView(FormMixin, LoginRequiredMixin, generic.DetailView):
     model = Order
     template_name = 'user_order.html'
+    form_class = OrderReviewForm
+
+    def get_success_url(self):
+        return reverse('order-detail', kwargs={'pk': self.object.id})
 
     def get_context_data(self, *args, **kwargs):
         context = super(OrderByUserDetailView, self).get_context_data(**kwargs)
@@ -174,6 +179,19 @@ class OrderByUserDeleteView(LoginRequiredMixin, UserPassesTestMixin, generic.Del
     def test_func(self):
         car = self.get_object()
         return self.request.user == car.client
+
+class OrderLineByUserCreateView(LoginRequiredMixin, generic.CreateView):
+    model = OrderLine
+    fields = ['service', 'qty']
+    template_name = 'user_orderline_form.html'
+
+    def form_valid(self, form):
+        form.instance.order = Order.objects.get(pk=self.kwargs['pk'])
+        return super().form_valid(form)
+
+    def get_success_url(self):
+        pk = self.kwargs["pk"]
+        return reverse("my-order", kwargs={"pk": pk})
 
 
 @csrf_protect

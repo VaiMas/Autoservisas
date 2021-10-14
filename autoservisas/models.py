@@ -106,13 +106,17 @@ class OrderReview(models.Model):
 
 
 class OrderLine(models.Model):
-    order = models.ForeignKey('Order', verbose_name="Order", on_delete=models.SET_NULL, null=True, related_name='lines')
+    order = models.ForeignKey('Order', verbose_name="Order", on_delete=models.CASCADE, null=True, related_name='lines')
     service = models.ForeignKey('Service', verbose_name="Service", on_delete=models.SET_NULL, null=True)
     qty = models.IntegerField("Quantity")
 
     @property
     def item_sum(self):
         return self.service.price * self.qty
+
+    def get_absolute_url(self):
+        """Nurodo konkretaus aprašymo galinį adresą"""
+        return reverse('order-detail', args=[str(self.id)])
 
 
     class Meta:
