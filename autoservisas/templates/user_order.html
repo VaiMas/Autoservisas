@@ -1,16 +1,16 @@
 {% extends "base.html" %}
-
+{% load i18n %}
 {% block content %}
-    <h1>My order:</h1>
+    <h1>{% trans "My order:"%}</h1>
     <hr>
         <ul>
         <img class="rounded-circle" src="{{object.client.profile.picture.url}}">
-        <li><strong class="{% if object.is_overdue %}text-danger{% endif %}">Car: {{ order.car }}</strong></li>
-        <li><strong>Due to:</strong> {{object.due_date}}</li>
+        <li><strong class="{% if object.is_overdue %}text-danger{% endif %}">{% trans "Car: "%}{{ order.car }}</strong></li>
+        <li><strong>{% trans "Due to:"%}</strong> {{object.due_date}}</li>
             {% if object.client == user %}
             <div>
-                <a class="btn btn-secondary btn-sm mt-1 mb-1" href="{% url 'my-order-update' object.id %}">Edit</a>
-                <a class="btn btn-danger btn-sm mt-1 mb-1" href="{% url 'my-order-delete' object.id %}">Delete</a>
+                <a class="btn btn-secondary btn-sm mt-1 mb-1" href="{% url 'my-order-update' object.id %}">{% trans "Edit"%}</a>
+                <a class="btn btn-danger btn-sm mt-1 mb-1" href="{% url 'my-order-delete' object.id %}">{% trans "Delete"%}</a>
             </div>
             {% endif %}
 
@@ -18,15 +18,15 @@
       </li>
     </ul>
 <div style="margin-left:20px;margin-top:20px">
-    <h4>Services:</h4>
+    <h4>{% trans "Services:"%}</h4>
     {% for orderline in order.lines.all %}
     <hr>
-    <p>{{ orderline.service }} - {{orderline.qty}} pcs. Total: {{orderline.item_sum}} </p>
+    <p>{{ orderline.service }} - {{orderline.qty}}{% trans "pcs. Total: "%} {{orderline.item_sum}} </p>
     {% endfor %}
-    <p><strong>Total: </strong> {{ order.total_sum }} </p>
+    <p><strong>{% trans "Total: "%}</strong> {{ order.total_sum }} </p>
     </br>
-    <a class="btn btn-primary btn-lg active" href="{% url 'my-orderline' order.pk %}">New Order</a>
-    <h4>Reviews:</h4>
+    <a class="btn btn-primary btn-lg active" href="{% url 'my-orderline' order.pk %}">{% trans "New Order"%}</a>
+    <h4>{% trans "Reviews:"%}</h4>
     {% if order.orderreview_set.all %}
     {% for review in order.orderreview_set.all %}
     <hr>
@@ -34,18 +34,18 @@
     <p>{{ review.content }}</p>
     {% endfor %}
     {% else %}
-    <p>There is no reviews</p>
+    <p>{% trans "There is no reviews"%}</p>
     {% endif %}
 
     {% if user.is_authenticated %}
     <div class="fieldWrapper">
         <hr>
         <br/>
-        <h4>Leave your review:</h4>
+        <h4>{% trans "Leave your review:"%}</h4>
         <form action="" method="post">
             {% csrf_token %}
             {{ form.content }}</br>
-            <input type="submit" value="Save">
+            <input type="submit" value="{% trans 'Save'%}">
         </form>
     </div>
     {% endif %}

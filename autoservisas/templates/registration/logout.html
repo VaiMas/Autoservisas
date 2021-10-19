@@ -1,6 +1,6 @@
 {% extends "base.html" %}
-
+{% load i18n %}
 {% block content %}
-  <p>Successfully logged out!</p>
-  <a href="{% url 'login'%}">Log In</a>
+  <p>{% trans "Successfully logged out!" %}</p>
+  <a href="{% url 'login'%}">{% trans "Log In" %}</a>
 {% endblock %}

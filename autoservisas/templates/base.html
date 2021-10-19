@@ -13,6 +13,21 @@
     <link rel="stylesheet" href="{% static 'css/styles.css' %}">
 </head>
 <body>
+{% load i18n %}
+      <form action="{% url 'set_language' %}" method="post">
+        {% csrf_token %}
+        <input name="next" type="hidden" value="{{ redirect_to }}"/>
+        <select name="language" onchange="this.form.submit()">
+          {% load static %}
+          {% get_current_language as LANGUAGE_CODE %}
+          {% get_available_languages as LANGUAGES %}
+          {% for lang in LANGUAGES %}
+          <option style="background-image: url({% static 'img/lt.png' %});" value="{{ lang.0 }}" {% if lang.0 == LANGUAGE_CODE %} selected="selected" {% endif %}>
+            {{ lang.0 }}
+          </option>
+          {% endfor %}
+        </select>
+      </form>
 <!-- Navigation -->
 <nav class="navbar navbar-expand-lg navbar-light bg-light static-top mb-5 shadow">
     <div class="container">
@@ -23,7 +38,7 @@
                       d="M.102 2.223A3.004 3.004 0 003.78 5.897l6.341 6.252A3.003 3.003 0 0013 16a3 3 0 10-.851-5.878L5.897 3.781A3.004 3.004 0 002.223.1l2.141 2.142L4 4l-1.757.364L.102 2.223zm13.37 9.019L13 11l-.471.242-.529.026-.287.445-.445.287-.026.529L11 13l.242.471.026.529.445.287.287.445.529.026L13 15l.471-.242.529-.026.287-.445.445-.287.026-.529L15 13l-.242-.471-.026-.529-.445-.287-.287-.445-.529-.026z"
                       clip-rule="evenodd"/>
             </svg>
-            Autoservice</a>
+            {% trans "Autoservice" %}</a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive"
                 aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
@@ -31,13 +46,13 @@
         <div class="collapse navbar-collapse" id="navbarResponsive">
             <ul class="navbar-nav ml-auto">
                 <li class="nav-item">
-                    <a class="nav-link" href="{% url 'index' %}">Home</a>
+                    <a class="nav-link" href="{% url 'index' %}">{% trans "Home" %}</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="{% url 'cars' %}">Cars</a>
+                    <a class="nav-link" href="{% url 'cars' %}">{% trans "Automobiliai" %}</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="{% url 'orders' %}">Orders</a>
+                    <a class="nav-link" href="{% url 'orders' %}">{% trans "Orders" %}</a>
                 </li>
                 <li>
                     <form action="{% url 'search' %}" method="get" class="form-inline my-2 my-md-0">
@@ -53,14 +68,13 @@
                               clip-rule="evenodd"/>
                     </svg>
                     {{ user.get_username }}</a></li>
-                <li class="nav-item"><a class="nav-link" href="{% url 'my-orders'%}">My Orders</a></li>
-                <li class="nav-item"><a class="nav-link" href="{% url 'my-orders-new'%}?next=/autoservisas">New
-                    Order</a></li>
+                <li class="nav-item"><a class="nav-link" href="{% url 'my-orders'%}">{% trans "My Orders" %}</a></li>
+                <li class="nav-item"><a class="nav-link" href="{% url 'my-orders-new'%}?next=/autoservisas">{% trans "New Order"%}</a></li>
 
-                <li class="nav-item"><a class="nav-link" href="{% url 'logout'%}?next=/autoservisas">Logout</a></li>
+                <li class="nav-item"><a class="nav-link" href="{% url 'logout'%}?next=/autoservisas">{% trans "Logout" %}</a></li>
                 {% else %}
-                <li class="nav-item"><a class="nav-link" href="{% url 'login'%}?next={{request.path}}">Login</a></li>
-                <li class="nav-item"><a class="nav-link" href="{% url 'register'%}">Registration</a></li>
+                <li class="nav-item"><a class="nav-link" href="{% url 'login'%}?next={{request.path}}">{% trans "Login" %}</a></li>
+                <li class="nav-item"><a class="nav-link" href="{% url 'register'%}">{% trans "Registration" %}</a></li>
                 {% endif %}
             </ul>
         </div>

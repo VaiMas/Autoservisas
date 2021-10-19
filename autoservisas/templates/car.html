@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-
+{% load i18n %}
 {% block content %}
 {% load static %}
     <div class="container car">
@@ -8,10 +8,10 @@
         {% else %}
           <img src="{% static 'img/no-image.png' %}" class="card-img-top">
         {% endif %}
-        <p>Car Owner: </strong>{{ car.owner }}</p>
-        <p>Car Model: </strong>{{ car.car_model }} </p>
-        <p>Licence plate: </strong>{{ car.licence_plate }}</p>
-        <p>VIN code: </strong>{{ car.vin_code }}</p>
-        <p>Description:{{ car.description | safe }}</p>
+        <p>{% trans "Car Owner:" %}</strong>{{ car.owner }}</p>
+        <p>{% trans "Car Model:" %}</strong>{{ car.car_model }} </p>
+        <p>{% trans "Licence plate:" %}</strong>{{ car.licence_plate }}</p>
+        <p>{% trans "VIN code:" %}</strong>{{ car.vin_code }}</p>
+        <p>{% trans "Description:"%}{{ car.description | safe }}</p>
     </div>
 {% endblock %}

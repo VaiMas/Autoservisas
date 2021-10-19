@@ -6,13 +6,14 @@ import pytz
 from tinymce.models import HTMLField
 from PIL import Image
 utc = pytz.UTC
+from django.utils.translation import gettext_lazy as _
 
 
 
 # Create your models here.
 class CarModel(models.Model):
-    manufacturer = models.CharField(verbose_name='Manufacturer', max_length=200, help_text='Enter Car manufacturer')
-    model = models.CharField(verbose_name='Model', max_length=200, help_text='Enter model name')
+    manufacturer = models.CharField(verbose_name=_('Manufacturer'), max_length=200, help_text='Enter Car manufacturer')
+    model = models.CharField(verbose_name=_('Model'), max_length=200, help_text='Enter model name')
 
     def __str__(self):
         return f"{self.manufacturer} {self.model}"
@@ -23,12 +24,12 @@ class CarModel(models.Model):
 
 
 class Car(models.Model):
-    licence_plate = models.CharField(verbose_name='Licence plate', max_length=10)
-    owner = models.CharField(verbose_name='Owner', null=True, max_length=200)
-    vin_code = models.CharField(verbose_name='VIN code', max_length=13)
-    car_model = models.ForeignKey('CarModel', verbose_name='Model', on_delete=models.SET_NULL, null=True, blank=True)
-    cover = models.ImageField('Image', upload_to='covers', null=True, blank=True)
-    description = HTMLField('Description', null=True, blank=True)
+    licence_plate = models.CharField(verbose_name=_('Licence plate'), max_length=10)
+    owner = models.CharField(verbose_name=_('Owner'), null=True, max_length=200)
+    vin_code = models.CharField(verbose_name=_('VIN code'), max_length=13)
+    car_model = models.ForeignKey('CarModel', verbose_name=_('Model'), on_delete=models.SET_NULL, null=True, blank=True)
+    cover = models.ImageField(_('Image'), upload_to='covers', null=True, blank=True)
+    description = HTMLField(_('Description'), null=True, blank=True)
 
     def __str__(self):
         return f"{self.owner} {self.car_model} {self.licence_plate} {self.vin_code}"
@@ -39,8 +40,8 @@ class Car(models.Model):
 
 
 class Service(models.Model):
-    name = models.CharField(verbose_name='Name', max_length=200)
-    price = models.FloatField(verbose_name='Price')
+    name = models.CharField(verbose_name=_('Name'), max_length=200)
+    price = models.FloatField(verbose_name=_('Price'))
 
 
     def __str__(self):
@@ -52,8 +53,8 @@ class Service(models.Model):
 
 
 class Order(models.Model):
-    due_date = models.DateTimeField(verbose_name='Due Date', null=True, blank=True)
-    car = models.ForeignKey('Car', verbose_name='Car', on_delete=models.SET_NULL, null=True)
+    due_date = models.DateTimeField(verbose_name=_('Due Date'), null=True, blank=True)
+    car = models.ForeignKey('Car', verbose_name=_('Car'), on_delete=models.SET_NULL, null=True)
     client = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True)
 
 
@@ -102,13 +103,13 @@ class OrderReview(models.Model):
     order = models.ForeignKey('Order', on_delete=models.SET_NULL, null=True, blank=True)
     reviewer = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True)
     date_created = models.DateTimeField(auto_now_add=True)
-    content = models.TextField('Review', max_length=2000)
+    content = models.TextField(_('Review'), max_length=2000)
 
 
 class OrderLine(models.Model):
     order = models.ForeignKey('Order', verbose_name="Order", on_delete=models.CASCADE, null=True, related_name='lines')
     service = models.ForeignKey('Service', verbose_name="Service", on_delete=models.SET_NULL, null=True)
-    qty = models.IntegerField("Quantity")
+    qty = models.IntegerField(_("Quantity"))
 
     @property
     def item_sum(self):

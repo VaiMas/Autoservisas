@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-
+{% load i18n %}
 {% block content %}
  {% load static %}
   <h1>Cars</h1>
@@ -22,7 +22,7 @@
       {% endfor %}
     </div>
     {% else %}
-      <p>There is no cars.</p>
+      <p>{% trans "There is no cars."%}</p>
     {% endif %}
 <div class="container cars">
     <nav aria-label="...">

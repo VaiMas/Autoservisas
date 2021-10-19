@@ -1,15 +1,15 @@
 {% extends "base.html" %}
-
+{% load i18n %}
 {% block content %}
-  <h1>The Best Car Service in Town</h1>
-  <p>Welcome to car paradise!</p>
-  <p>At the moment:</p>
+  <h1>{% trans "The Best Car Service in Town" %}</h1>
+  <p>{% trans "Welcome to car paradise!" %}</p>
+  <p>{% trans "At the moment:" %}</p>
   <ul>
-    <li><strong>Services:</strong> {{ num_services }}</li>
-    <li><strong>Cars:</strong> {{ num_cars }}</li>
-    <li><strong>Orders:</strong> {{ num_orders }}</li>
-    <li><strong>Orders status "Done":</strong> {{ num_order_status }}</li>
-    <li><strong>Car Models:</strong> {{ num_models }}</li>
+    <li><strong>{% trans "Services:" %}</strong> {{ num_services }}</li>
+    <li><strong>{% trans "Cars:" %}</strong> {{ num_cars }}</li>
+    <li><strong>{% trans "Orders:" %}</strong> {{ num_orders }}</li>
+    <li><strong>{% trans "Orders status:" %}</strong> {{ num_order_status }}</li>
+    <li><strong>{% trans "Car Models:" %}</strong> {{ num_models }}</li>
   </ul>
-<p>You visited {{ num_visits }}-th time.</p>
+<p>{% trans "Your visits:" %} {{ num_visits }}</p>
 {% endblock %}

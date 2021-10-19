@@ -14,7 +14,7 @@ from django.views.generic.edit import FormMixin
 from django.contrib.auth.decorators import login_required
 from .forms import OrderReviewForm, UserUpdateForm, ProfileUpdateForm
 from django.contrib.auth.mixins import UserPassesTestMixin
-import request
+from django.utils.translation import gettext as _
 
 
 # Create your views here.
@@ -187,6 +187,7 @@ class OrderLineByUserCreateView(LoginRequiredMixin, generic.CreateView):
 
     def form_valid(self, form):
         form.instance.order = Order.objects.get(pk=self.kwargs['pk'])
+        form.save()
         return super().form_valid(form)
 
     def get_success_url(self):
@@ -206,18 +207,18 @@ def register(request):
         if password == password2:
             # tikriname, ar neužimtas username
             if User.objects.filter(username=username).exists():
-                messages.error(request, f'User name {username} already in use!')
+                messages.error(request, _('User name {} already in use!'.format(username)))
                 return redirect('register')
             else:
                 # tikriname, ar nėra tokio pat email
                 if User.objects.filter(email=email).exists():
-                    messages.error(request, f'Email {email} already in use!')
+                    messages.error(request, _(f'Email {email} already in use!'))
                     return redirect('register')
                 else:
                     # jeigu viskas tvarkoje, sukuriame naują vartotoją
                     User.objects.create_user(username=username, email=email, password=password)
         else:
-            messages.error(request, 'Passwords do not match')
+            messages.error(request, _('Passwords do not match'))
             return redirect('register')
     return render(request, 'register.html')
 
@@ -229,7 +230,7 @@ def profile(request):
         if u_form.is_valid() and p_form.is_valid():
             u_form.save()
             p_form.save()
-            messages.success(request, f"Profile updated")
+            messages.success(request, _(f"Profile updated"))
             return redirect('profile')
     else:
         u_form = UserUpdateForm(instance=request.user)
